@@ -1,14 +1,30 @@
 import styled from "styled-components";
 
 interface Props {
+  disabled?: boolean;
+  width?: number;
+  height?: number;
   children?: React.ReactNode;
 }
 
-export default function BasicButton({ children }: Props) {
-  return <Wrapper>{children}</Wrapper>;
+export default function BasicButton({
+  disabled,
+  width,
+  height,
+  children,
+}: Props) {
+  return (
+    <Wrapper disabled={disabled} width={width} height={height}>
+      {children}
+    </Wrapper>
+  );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{
+  disabled?: boolean;
+  width?: number;
+  height?: number;
+}>`
   height: 64px;
   min-width: 74px;
   border-radius: 15px;
@@ -20,4 +36,28 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 0px 20px;
   color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+
+  ${({ width }) =>
+    width &&
+    `
+    width: ${width}px;
+  `}
+
+  ${({ height }) =>
+    height &&
+    `
+    height: ${height}px;
+  `}
+
+  ${({ disabled }) =>
+    disabled &&
+    `
+    opacity: 0.2;
+    color: #fff;
+    box-shadow: none;
+    cursor: not-allowed;
+  `}
 `;
