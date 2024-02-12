@@ -22,7 +22,7 @@ const Container = styled.header`
   position: sticky;
   top: 0;
   height: 96px;
-  padding: 0 60px;
+  padding: 0 120px;
   background-color: #1b1d25;
   border-bottom: 2px solid rgba(249, 248, 252, 0.2);
   z-index: 100;
