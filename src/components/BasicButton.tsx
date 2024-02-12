@@ -1,9 +1,11 @@
+import { HtmlHTMLAttributes } from "react";
 import styled from "styled-components";
-
+import { PulseLoader } from "react-spinners";
 interface Props {
   disabled?: boolean;
   width?: number;
   height?: number;
+  loading?: boolean;
   children?: React.ReactNode;
 }
 
@@ -11,11 +13,22 @@ export default function BasicButton({
   disabled,
   width,
   height,
+  loading,
   children,
-}: Props) {
+  ...props
+}: Props & HtmlHTMLAttributes<HTMLDivElement>) {
   return (
-    <Wrapper disabled={disabled} width={width} height={height}>
-      {children}
+    <Wrapper {...props} disabled={disabled} width={width} height={height}>
+      {loading ? (
+        <CustomPulseLoader
+          color={"#384BA8"}
+          loading={true}
+          size={10}
+          speedMultiplier={0.6}
+        />
+      ) : (
+        children
+      )}
     </Wrapper>
   );
 }
@@ -61,3 +74,5 @@ const Wrapper = styled.div<{
     cursor: not-allowed;
   `}
 `;
+
+const CustomPulseLoader = styled(PulseLoader)``;
