@@ -11,8 +11,14 @@ import { SyncLoader } from "react-spinners";
 import { useState } from "react";
 
 export default function TechReview() {
-  const { techReviewPdf, setTechReviewPdf, previewUrl, setPreviewUrl } =
-    useTechReviewContext();
+  const {
+    techReviewPdf,
+    setTechReviewPdf,
+    previewUrl,
+    setPreviewUrl,
+    resultFile,
+    setResultFile,
+  } = useTechReviewContext();
   const [loading, setLoading] = useState(false);
 
   const handleFileSubmit = async () => {
@@ -25,10 +31,27 @@ export default function TechReview() {
         HttpClient
       ).getTechReviewPdf(techReviewPdf);
       console.log(response);
+      setResultFile(response.data);
     } catch (err) {
       console.error(err);
     }
     setLoading(false);
+  };
+
+  const tmp = () => {
+    const url = window.URL.createObjectURL(
+      new Blob([resultFile as BlobPart], { type: "application/pdf" })
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "report.pdf"); // 파일 이름 설정
+    document.body.appendChild(link);
+
+    // 클릭하여 다운로드 시작
+    link.click();
+
+    // 사용이 끝난 링크 제거
+    link.parentNode?.removeChild(link);
   };
 
   return (
@@ -69,7 +92,12 @@ export default function TechReview() {
               )}
             </ContentBox>
             <div className="button-wrapper">
-              <BasicButton width={220} height={56}>
+              <BasicButton
+                width={220}
+                height={56}
+                onClick={tmp}
+                disabled={!!!resultFile}
+              >
                 보고서 다운로드
               </BasicButton>
             </div>

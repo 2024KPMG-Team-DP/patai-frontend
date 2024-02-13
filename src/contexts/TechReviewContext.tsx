@@ -5,6 +5,8 @@ interface TechReviewContext {
   setTechReviewPdf: (file: File | null) => void;
   previewUrl: string | null;
   setPreviewUrl: (url: string | null) => void;
+  resultFile: Blob | null;
+  setResultFile: (file: Blob | null) => void;
 }
 
 const TechReviewContext = createContext<TechReviewContext | undefined>({
@@ -12,6 +14,8 @@ const TechReviewContext = createContext<TechReviewContext | undefined>({
   setTechReviewPdf: () => {},
   previewUrl: null,
   setPreviewUrl: () => {},
+  resultFile: null,
+  setResultFile: () => {},
 });
 
 export const useTechReviewContext = () => {
@@ -29,10 +33,18 @@ export const TechReviewContextProvider = ({
 }) => {
   const [techReviewPdf, setTechReviewPdf] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [resultFile, setResultFile] = useState<Blob | null>(null);
 
   return (
     <TechReviewContext.Provider
-      value={{ techReviewPdf, setTechReviewPdf, previewUrl, setPreviewUrl }}
+      value={{
+        techReviewPdf,
+        setTechReviewPdf,
+        previewUrl,
+        setPreviewUrl,
+        resultFile,
+        setResultFile,
+      }}
     >
       {children}
     </TechReviewContext.Provider>

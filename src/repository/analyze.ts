@@ -15,6 +15,7 @@ class AnalyzeRepositoryImpl implements AnalyzeRepository {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      responseType: "blob",
     });
     console.log(response);
 
