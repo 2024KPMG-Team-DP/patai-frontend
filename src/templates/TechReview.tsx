@@ -11,19 +11,11 @@ import { SyncLoader } from "react-spinners";
 import { useState } from "react";
 
 export default function TechReview() {
-  const {
-    techReviewPdf,
-    setTechReviewPdf,
-    previewUrl,
-    setPreviewUrl,
-    resultFile,
-    setResultFile,
-  } = useTechReviewContext();
+  const { techReviewPdf, setTechReviewPdf, resultFile, setResultFile } =
+    useTechReviewContext();
   const [loading, setLoading] = useState(false);
 
   const handleFileSubmit = async () => {
-    console.log("handleFileSubmit");
-    console.log(techReviewPdf);
     if (!techReviewPdf || loading) return;
     setLoading(true);
     try {
@@ -56,7 +48,11 @@ export default function TechReview() {
       <Header />
       <DefaultLayout>
         <UploadContainer>
-          <Upload />
+          <Upload
+            placeholder="기술 문서를 업로드하세요."
+            setFile={setTechReviewPdf}
+            file={techReviewPdf}
+          />
           <BasicButton
             loading={loading}
             disabled={!!!techReviewPdf}
@@ -69,7 +65,9 @@ export default function TechReview() {
           <PreviewContainer>
             <div className="title">기술문서</div>
             <PreviewBox>
-              <PdfPreview url={previewUrl} />
+              <PdfPreview
+                url={techReviewPdf && window.URL.createObjectURL(techReviewPdf)}
+              />
             </PreviewBox>
           </PreviewContainer>
           <ResultContainer>

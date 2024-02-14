@@ -3,8 +3,6 @@ import { createContext, useContext, useState } from "react";
 interface TechReviewContext {
   techReviewPdf: File | null;
   setTechReviewPdf: (file: File | null) => void;
-  previewUrl: string | null;
-  setPreviewUrl: (url: string | null) => void;
   resultFile: Blob | null;
   setResultFile: (file: Blob | null) => void;
 }
@@ -12,8 +10,6 @@ interface TechReviewContext {
 const TechReviewContext = createContext<TechReviewContext | undefined>({
   techReviewPdf: null,
   setTechReviewPdf: () => {},
-  previewUrl: null,
-  setPreviewUrl: () => {},
   resultFile: null,
   setResultFile: () => {},
 });
@@ -32,7 +28,6 @@ export const TechReviewContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [techReviewPdf, setTechReviewPdf] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultFile, setResultFile] = useState<Blob | null>(null);
 
   return (
@@ -40,8 +35,6 @@ export const TechReviewContextProvider = ({
       value={{
         techReviewPdf,
         setTechReviewPdf,
-        previewUrl,
-        setPreviewUrl,
         resultFile,
         setResultFile,
       }}

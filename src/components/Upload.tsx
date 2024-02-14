@@ -1,23 +1,19 @@
 import styled from "styled-components";
-import { useTechReviewContext } from "../contexts/TechReviewContext";
-import { useEffect, useState } from "react";
 
-export default function Upload() {
-  const { techReviewPdf, setTechReviewPdf, previewUrl, setPreviewUrl } =
-    useTechReviewContext();
+interface Props {
+  placeholder: string;
+  setFile: (file: File | null) => void;
+  file: File | null;
+}
 
-  useEffect(() => {
-    console.log(previewUrl);
-  }, [previewUrl]);
-
+export default function Upload({ placeholder, setFile, file }: Props) {
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = (e) => {
       console.log(file.name);
-      setTechReviewPdf(file);
-      setPreviewUrl(reader.result as string);
+      setFile(file);
     };
 
     reader.readAsDataURL(file);
@@ -28,7 +24,7 @@ export default function Upload() {
       <label htmlFor="pdf-upload">
         <InputBox>
           <BrowseButton>Browse</BrowseButton>
-          {techReviewPdf ? techReviewPdf.name : `기술 문서를 업로드하세요`}
+          {file ? file.name : placeholder}
         </InputBox>
       </label>
       <input
