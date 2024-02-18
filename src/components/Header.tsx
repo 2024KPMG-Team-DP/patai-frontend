@@ -9,6 +9,9 @@ export default function Header() {
     <Container>
       <Wrapper>
         <div className="left">
+          <LogoWrapper>
+            <img src="/img/patai_logo.png" alt="logo" />
+          </LogoWrapper>
           <Feature
             selected={path === "/tech_review"}
             onClick={() => {
@@ -25,7 +28,14 @@ export default function Header() {
           >
             명세서 작성
           </Feature>
-          <Feature>명세서 검토</Feature>
+          <Feature
+            selected={path === "/spec_review"}
+            onClick={() => {
+              navigate("/spec_review");
+            }}
+          >
+            명세서 검토
+          </Feature>
           <Feature>의견제출통지서 검토</Feature>
         </div>
         <div className="right">
@@ -56,7 +66,7 @@ const Wrapper = styled.div`
   .left {
     display: flex;
     justify-content: space-between;
-    /* width: 500px; */
+    align-items: center;
   }
   .right {
     display: flex;
@@ -78,5 +88,17 @@ const Feature = styled.div<{ selected?: boolean }>`
   cursor: pointer;
   &:hover {
     color: #05365f;
+  }
+`;
+
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 20px;
+
+  img {
+    height: 50px;
   }
 `;
