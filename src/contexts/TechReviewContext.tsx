@@ -1,17 +1,18 @@
 import { createContext, useContext, useState } from "react";
+import { TechReviewResult } from "../entity/techReview";
 
 interface TechReviewContext {
   techReviewPdf: File | null;
   setTechReviewPdf: (file: File | null) => void;
-  resultFile: Blob | null;
-  setResultFile: (file: Blob | null) => void;
+  result: TechReviewResult | null;
+  setResult: (result: TechReviewResult | null) => void;
 }
 
 const TechReviewContext = createContext<TechReviewContext | undefined>({
   techReviewPdf: null,
   setTechReviewPdf: () => {},
-  resultFile: null,
-  setResultFile: () => {},
+  result: null,
+  setResult: () => {},
 });
 
 export const useTechReviewContext = () => {
@@ -28,15 +29,15 @@ export const TechReviewContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [techReviewPdf, setTechReviewPdf] = useState<File | null>(null);
-  const [resultFile, setResultFile] = useState<Blob | null>(null);
+  const [result, setResult] = useState<TechReviewResult | null>(null);
 
   return (
     <TechReviewContext.Provider
       value={{
         techReviewPdf,
         setTechReviewPdf,
-        resultFile,
-        setResultFile,
+        result,
+        setResult,
       }}
     >
       {children}

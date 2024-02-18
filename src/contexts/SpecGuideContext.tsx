@@ -1,17 +1,18 @@
 import { createContext, useContext, useState } from "react";
+import { SpecGuideResult } from "../entity/specGuide";
 
 interface SpecGuideContext {
   techInputPdf: File | null;
   setTechInputPdf: (file: File | null) => void;
-  resultFile: Blob | null;
-  setResultFile: (file: Blob | null) => void;
+  result: SpecGuideResult | null;
+  setResult: (file: SpecGuideResult | null) => void;
 }
 
 const SpecGuideContext = createContext<SpecGuideContext | undefined>({
   techInputPdf: null,
   setTechInputPdf: () => {},
-  resultFile: null,
-  setResultFile: () => {},
+  result: null,
+  setResult: () => {},
 });
 
 export const useSpecGuideContext = () => {
@@ -28,15 +29,15 @@ export const SpecGuideContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [techInputPdf, setTechInputPdf] = useState<File | null>(null);
-  const [resultFile, setResultFile] = useState<Blob | null>(null);
+  const [result, setResult] = useState<SpecGuideResult | null>(null);
 
   return (
     <SpecGuideContext.Provider
       value={{
         techInputPdf,
         setTechInputPdf,
-        resultFile,
-        setResultFile,
+        result,
+        setResult,
       }}
     >
       {children}

@@ -1,9 +1,10 @@
+import { SpecGuideContextProvider } from "../contexts/SpecGuideContext";
 import SpecGuide from "../templates/SpecGuide";
 
 export default function SpecGuidePage() {
   return (
-    <div>
+    <SpecGuideContextProvider>
       <SpecGuide />
-    </div>
+    </SpecGuideContextProvider>
   );
 }

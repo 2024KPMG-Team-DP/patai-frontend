@@ -15,7 +15,20 @@ class AnalyzeRepositoryImpl implements AnalyzeRepository {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      responseType: "blob",
+    });
+    console.log(response);
+
+    return response;
+  }
+
+  public async getSpecGuidePdf(pdf: File) {
+    const formData = new FormData();
+    formData.append("pdf", pdf);
+
+    const response = await this.client.post(`/specGuide`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
     console.log(response);
 
