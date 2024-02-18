@@ -4,9 +4,15 @@ interface Props {
   placeholder: string;
   setFile: (file: File | null) => void;
   file: File | null;
+  uploadId: string;
 }
 
-export default function Upload({ placeholder, setFile, file }: Props) {
+export default function Upload({
+  placeholder,
+  setFile,
+  file,
+  uploadId,
+}: Props) {
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -21,7 +27,7 @@ export default function Upload({ placeholder, setFile, file }: Props) {
 
   return (
     <Wrapper>
-      <label htmlFor="pdf-upload">
+      <label htmlFor={uploadId}>
         <InputBox>
           <BrowseButton>Browse</BrowseButton>
           {file ? file.name : placeholder}
@@ -29,7 +35,7 @@ export default function Upload({ placeholder, setFile, file }: Props) {
       </label>
       <input
         type="file"
-        id="pdf-upload"
+        id={uploadId}
         style={{ display: "none" }}
         onChange={handleFileChange}
       />

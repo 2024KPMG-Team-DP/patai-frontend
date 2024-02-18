@@ -38,7 +38,7 @@ export default function TechReview() {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "report.pdf"); // 파일 이름 설정
+    link.setAttribute("download", "기술_검토_보고서.pdf"); // 파일 이름 설정
     document.body.appendChild(link);
 
     link.click();
@@ -51,6 +51,7 @@ export default function TechReview() {
       <DefaultLayout>
         <UploadContainer>
           <Upload
+            uploadId="techReviewPdf"
             placeholder="기술 문서를 업로드하세요."
             setFile={setTechReviewPdf}
             file={techReviewPdf}

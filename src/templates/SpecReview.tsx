@@ -3,26 +3,32 @@ import DefaultLayout from "../components/DefaultLayout";
 import Header from "../components/Header";
 import Upload from "../components/Upload";
 import BasicButton from "../components/BasicButton";
-import { useSpecGuideContext } from "../contexts/SpecGuideContext";
-import { useState } from "react";
-import PdfPreview from "../components/PdfPreview";
+import { useEffect, useState } from "react";
 import { SyncLoader } from "react-spinners";
+import PdfPreview from "../components/PdfPreview";
+import { useSpecReviewContext } from "../contexts/SpecReviewContext";
+import { b64toBlob } from "../util/convert";
 import AnalyzeRepositoryImpl from "../repository/analyze";
 import HttpClient from "../network/httpClient";
-import { b64toBlob } from "../util/convert";
 
-export default function SpecGuide() {
-  const { techInputPdf, setTechInputPdf, result, setResult } =
-    useSpecGuideContext();
+export default function SpecReview() {
   const [loading, setLoading] = useState(false);
+  const {
+    specInputToApplicate,
+    setSpecInputToApplicate,
+    specInputToCompare,
+    setSpecInputToCompare,
+    result,
+    setResult,
+  } = useSpecReviewContext();
 
   const handleFileSubmit = async () => {
-    if (!techInputPdf || loading) return;
+    if (!specInputToApplicate || !specInputToCompare || loading) return;
     setLoading(true);
     try {
       const response = await new AnalyzeRepositoryImpl(
         HttpClient
-      ).getSpecGuidePdf(techInputPdf);
+      ).getSpecReviewPdf(specInputToApplicate, specInputToCompare);
       console.log(response);
       setResult(response.data);
     } catch (err) {
@@ -37,7 +43,7 @@ export default function SpecGuide() {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "멍세서_초안_작성_가이드.pdf"); // 파일 이름 설정
+    link.setAttribute("download", "명세서_검토_보고서.pdf"); // 파일 이름 설정
     document.body.appendChild(link);
 
     link.click();
@@ -49,15 +55,27 @@ export default function SpecGuide() {
       <Header />
       <DefaultLayout>
         <UploadContainer>
-          <Upload
-            uploadId="techInputPdf"
-            placeholder="기술 문서를 업로드하세요."
-            setFile={setTechInputPdf}
-            file={techInputPdf}
-          />
+          <div className="input-container">
+            <div className="left">
+              <Upload
+                uploadId="specInputToApplicate"
+                placeholder="출원할 명세서를 업로드하세요."
+                setFile={setSpecInputToApplicate}
+                file={specInputToApplicate}
+              />
+            </div>
+            <div className="right">
+              <Upload
+                uploadId="specInputToCompare"
+                placeholder="비교할 명세서를 업로드하세요."
+                setFile={setSpecInputToCompare}
+                file={specInputToCompare}
+              />
+            </div>
+          </div>
           <BasicButton
-            loading={loading}
-            disabled={!!!techInputPdf}
+            loading={false}
+            disabled={!!!specInputToApplicate || !!!specInputToCompare}
             onClick={handleFileSubmit}
           >
             검토
@@ -65,15 +83,18 @@ export default function SpecGuide() {
         </UploadContainer>
         <MainContainer>
           <PreviewContainer>
-            <div className="title">기술문서</div>
+            <div className="title">명세서</div>
             <PreviewBox>
               <PdfPreview
-                url={techInputPdf && window.URL.createObjectURL(techInputPdf)}
+                url={
+                  specInputToApplicate &&
+                  window.URL.createObjectURL(specInputToApplicate)
+                }
               />
             </PreviewBox>
           </PreviewContainer>
           <ResultContainer>
-            <div className="title">명세서 초안 미리보기</div>
+            <div className="title">검토 보고서 미리보기</div>
             <ContentBox loading={loading}>
               {loading && (
                 <LoadingContainer>
@@ -111,28 +132,20 @@ export default function SpecGuide() {
         </MainContainer>
         {result?.data && (
           <ReportContainer>
-            <div className="title">명세서 초안 가이드</div>
-            <div className="sub">발명의 요약</div>
-            <div className="content">{result.data.info.summary}</div>
-            <div className="sub">발명의 설명</div>
-            <div className="sub">[발명의 명칭]</div>
-            <div className="content">{result.data.result.name}</div>
-            <div className="sub">[기술분야]</div>
-            <div className="content">{result.data.result.techField}</div>
-            <div className="sub">[발명의 배경이 되는 기술]</div>
-            <div className="content">{result.data.result.backgroundTech}</div>
-            <div className="sub">[해결해고자 하는 과제]</div>
-            <div className="content">
-              {result.data.result.content.problemToSolve}
+            <div className="title">명세서 검토 결과</div>
+            <div className="sub">청구범위 비교 및 검토 결과</div>
+            <div style={{ marginBottom: 40 }}>
+              {result.data.result.claims.map((claim, index) => (
+                <>
+                  <div key={index} className="claim-title">
+                    {claim.index}
+                  </div>
+                  <div className="claim-content">{claim.content}</div>
+                </>
+              ))}
             </div>
-            <div className="sub">[과제의 해결 수단]</div>
-            <div className="content">
-              {result.data.result.content.problemToSolve}
-            </div>
-            <div className="sub">[발명의 효과]</div>
-            <div className="content">
-              {result.data.result.content.effectOfInvent}
-            </div>
+            <div className="sub">종합 검토의견</div>
+            <div className="content">{result.data.result.conclusion}</div>
           </ReportContainer>
         )}
       </DefaultLayout>
@@ -147,6 +160,24 @@ const UploadContainer = styled.div`
   align-items: center;
   padding: 60px 0 60px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+
+  .input-container {
+    display: flex;
+    width: 100%;
+
+    .left {
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 50%;
+    }
+  }
 `;
 
 const MainContainer = styled.div`
@@ -251,6 +282,25 @@ const ReportContainer = styled.div`
     font-size: 16px;
     font-weight: 400;
     margin-bottom: 40px;
+    line-height: 1.5;
+  }
+
+  .claim-title {
+    color: #000;
+    font-family: Inter;
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.5;
+    text-decoration: underline;
+  }
+
+  .claim-content {
+    color: #000;
+    font-family: Inter;
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 16px;
     line-height: 1.5;
   }
 `;

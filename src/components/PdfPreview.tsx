@@ -29,7 +29,7 @@ export default function PdfPreview({ url }: Props) {
             <Page
               key={`page_${index + 1}`}
               pageNumber={index + 1}
-              height={600}
+              height={800}
             />
           ))}
         </Document>

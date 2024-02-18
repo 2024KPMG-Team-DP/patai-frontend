@@ -34,6 +34,23 @@ class AnalyzeRepositoryImpl implements AnalyzeRepository {
 
     return response;
   }
+
+  public async getSpecReviewPdf(pdfToApplicate: File, pdfToCompare: File) {
+    const formData = new FormData();
+    console.log(pdfToApplicate);
+    console.log(pdfToCompare);
+    formData.append("applicationSpec", pdfToApplicate);
+    formData.append("targetSpec", pdfToCompare);
+
+    const response = await this.client.post(`/specReview`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response);
+
+    return response;
+  }
 }
 
 export default AnalyzeRepositoryImpl;
